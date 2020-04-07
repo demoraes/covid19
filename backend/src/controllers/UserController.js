@@ -28,6 +28,8 @@ module.exports = {
       password,
     })
 
+    user.password = undefined;
+
     return response.json(user);
 
   }

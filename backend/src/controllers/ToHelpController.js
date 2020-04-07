@@ -1,10 +1,10 @@
-const Help = require('../models/Help');
+const ToHelp = require('../models/ToHelp');
 
 module.exports = {
 
   async index(request, response) {
     try {
-      const helps = await Help.find().populate(['user']);
+      const helps = await ToHelp.find().populate(['help', 'user']);
 
       return response.json({ helps });
     } catch (err) {
@@ -14,19 +14,17 @@ module.exports = {
 
   async store(request, response) {
 
-    const { filename } = request.file;
-    const { title, city, description, contribution } = request.body;
+    const { presentation } = request.body;
     const { user_id } = request.headers;
-    
+    const { toHelp_id } = request.params;
 
-    const help = await Help.create({
+    const help = await ToHelp.create({
+      presentation,
       user: user_id,
-      title,
-      city,
-      description,
-      contribution,
-      thumbnail: filename,
-    })
+      help: toHelp_id
+    });
+
+    await help.populate('help').populate('user').execPopulate();
 
     return response.json(help);
 
