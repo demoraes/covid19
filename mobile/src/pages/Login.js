@@ -8,7 +8,7 @@ import logo from '../assets/logo.png';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [password, setPassword] = useState('');
 
   useEffect(() => {
     AsyncStorage.getItem('user').then(user => {
@@ -19,13 +19,14 @@ export default function Login({ navigation }) {
   }, []);
 
   async function handleSubmit() {
-    // incluir chamada a api
-    //@morpa está fazendo a api
-    const id = email;
-    console.log(senha);
+    const response = await api.post('/authenticate', {
+      email,
+      password
+    })
 
+    const { _id } = response.data.user;
 
-    await AsyncStorage.setItem('usser', id);
+    await AsyncStorage.setItem('user', _id);
 
     navigation.navigate('Dashboard');
   }
@@ -54,8 +55,8 @@ export default function Login({ navigation }) {
           placeholderTextColor="#999"
           autoCapitalize="words"
           autoCorrect={false}
-          value={senha}
-          onChangeText={setSenha}
+          value={password}
+          onChangeText={setPassword}
         />
 
         <TouchableOpacity onPress={handleSubmit} style={styles.button}>

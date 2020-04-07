@@ -15,6 +15,10 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+}, {
+  toJSON: {
+    virtuals: true,
+  },
 });
 
 UserSchema.virtual('thumbnail_url').get(function () {

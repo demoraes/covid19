@@ -11,7 +11,7 @@ import casos from '../imagens/casos/corona.jpg';
 export default function Detail({ navigation }) {
 
   function navigateBack() {
-    navigation.goBack()
+    navigation.navigate('To_help');
   }
 
   return (
@@ -27,6 +27,7 @@ export default function Detail({ navigation }) {
 
             <TouchableOpacity onPress={navigateBack}>
               <FontAwesome5 name="angle-left" size={16} color="#E02041" />
+              <Text>Voltar</Text>
             </TouchableOpacity>
           </View>
 

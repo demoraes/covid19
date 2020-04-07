@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const HelpSchema = new mongoose.Schema({
   thumbnail: String,
-  title:String,
+  title: String,
   city: String,
   description: String,
   contribution: String,
@@ -14,6 +14,10 @@ const HelpSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+}, {
+  toJSON: {
+    virtuals: true,
   },
 });
 

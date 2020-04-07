@@ -1,54 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, AsyncStorage, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 
-
+import api from '../services/api';
 
 import logo from '../assets/logo.png';
-import casos from '../imagens/casos/corona.jpg';
 
 
 export default function To_help({ navigation }) {
-
+  const [incidents, setIncidents] = useState([]);
 
   function navigateToDetail() {
     navigation.navigate('Detail');
   }
+
+  async function loadIncidents() {
+    const response = await api.get('help');
+
+    setIncidents(response.data.helps);
+  }
+
+  useEffect(() => {
+    loadIncidents();
+  }, []);
 
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image source={logo} />
-        <Text style={styles.headerText}>
-          Total de <Text style={styles.headerTextBold}>casos</Text>
-        </Text>
       </View>
 
       <Text style={styles.title}>Bem Vindo</Text>
       <Text style={styles.description}>Escolha um dos casos ededew</Text>
 
       <FlatList
-        data={[1, 2, 3]}
+        data={incidents}
         style={styles.incidentList}
-        renderItem={() => (
+        keyExtractor={incident => String(incident.id)}
+        renderItem={({ item: incident }) => (
           <View style={styles.incident}>
             <Text style={styles.incidentProperty}>ENTIDADE:</Text>
-            <Text style={styles.incidentValue}>Hospital do cancer</Text>
+            <Text style={styles.incidentValue}>{incident.user.name}</Text>
 
             <Text style={styles.incidentProperty}>CASO:</Text>
-            <Image source={casos} style={styles.caso} />
-            <Text style={styles.incidentValue}>Devido a super lotação não temos comida e material de hiegiene suficiente para todo mundo</Text>
+            <Image style={styles.thumbnail} source={{ uri: incident.thumbnail_url }} />
+            <Text style={styles.incidentValue}>{incident.description}</Text>
 
             <Text style={styles.incidentProperty}>COMO CONTRIBUIR:</Text>
             <Text style={styles.incidentValue}>
-              Precisamos de cestas basicas e materiais de higiene
+              {incident.contribution}
             </Text>
 
             <TouchableOpacity
               style={styles.detailsButton}
               onPress={navigateToDetail}
+
             >
 
               <Text style={styles.detailsButtonText}>Ver mais detalhes</Text>
@@ -137,9 +145,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  caso: {
+  thumbnail: {
     width: 250,
-    height: 150
+    height: 150,
+    resizeMode: 'cover',
+    borderRadius: 2,
   }
 
 
