@@ -25,7 +25,7 @@ export default function Login({ navigation }) {
     console.log(senha);
 
 
-    await AsyncStorage.setItem('user', id);
+    await AsyncStorage.setItem('usser', id);
 
     navigation.navigate('Dashboard');
   }
